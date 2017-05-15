@@ -10,14 +10,15 @@ black = (  0,   0,   0, 255)
 white = (255, 255, 255, 255)
 size  = (1000, 1000)
 
-iterations = 3
-angel = pi/2
+iterations = 4
+angel = pi/3
 start_point = (450, 450)
 width_point = 1
 step_length = 1
-rule = 'F-F-F-F'
+rule = 'L'
 producitons = {
-    'F': 'F-F+F+FF-F-F+F',
+    'L': 'L+R++R-L--LL-R+',
+    'R': '-L+RR++R+L--L-R'
 }
 
 def rule_production(rule, producitons, iterations):
@@ -32,7 +33,7 @@ def draw_koch_islands(angel, rule, start_point, width_point, step_length):
     draw = ImageDraw.Draw(canvas)
     curr_angel = angel
     for r in rule:
-        if r == 'F':
+        if r in 'FLR':
             end_point = (start_point[0] - step_length*cos(curr_angel),
                          start_point[1] - step_length*sin(curr_angel))
             draw.line([start_point, end_point], fill=white, width=width_point)
@@ -58,7 +59,7 @@ def make_dimensions(size=(600, 600)):
     x_dim, y_dim = (0, 0), (0, 0)
     curr_angel = angel
     for r in rule:
-        if r == 'F' or r == 'f':
+        if r in 'fFLR':
             end_point = (start_point[0] - cos(curr_angel),
                          start_point[1] - sin(curr_angel))
             start_point = end_point
@@ -80,6 +81,7 @@ def make_dimensions(size=(600, 600)):
     return center, step
             
 start_point, step_length = make_dimensions(size)
-
 canvas = draw_koch_islands(angel, rule, start_point, width_point, step_length)
+
+#canvas = draw_koch_islands(angel, rule, (300, 300),  3, 5)
 canvas.show()
