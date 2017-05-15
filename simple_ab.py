@@ -5,14 +5,14 @@ black = (  0,   0,   0, 255)
 white = (255, 255, 255, 255)
 size  = (500, 500)
 
-def draw_line_init(start=(250, 500), step=50, angel=pi/12, iterations=8):
+def draw_line_init(start=(250, 500), step=50, angel=pi/12, iterations=4):
     canvas = Image.new('RGBA', size, black)
     draw = ImageDraw.Draw(canvas)
     draw_line('A', draw, start, step, angel, 0, 0, iterations)
     return canvas
 
 rules = {
-    'A': 'ABABA',
+    'A': 'ABA',
     'B': 'A'
 }
 
