@@ -3,8 +3,7 @@
 # 1.3 Turtle interpretation of strings
 # Edge rewriting L-system
 
-from PIL import Image, ImageDraw, ImageFont
-from math import pi, sin, cos, floor
+from PIL import Image, ImageDraw
 
 import numpy as np
 
@@ -12,8 +11,11 @@ black = (  0,   0,   0, 255)
 white = (255, 255, 255, 255)
 size  = (1000, 1000)
 
+def deg_to_rad(deg):
+    return np.pi/180*deg
+
 iterations = 4
-angel = pi/180*22.5
+angel = deg_to_rad(22.5)
 start_point = (500, 1000)
 width_point = 2
 step_length = 1
@@ -88,7 +90,7 @@ def make_dimensions(rule, size):
     
     x_width = sum([abs(x) for x in x_dim])
     y_width = sum([abs(y) for y in y_dim])
-    step = floor(min(size[0]/(x_width), size[1]/(y_width)))
+    step = np.floor(min(size[0]/(x_width), size[1]/(y_width)))
     step = step if step > 1 else 1
     
     center = np.array((abs(x_dim[0])*step + (size[0] - x_width * step)/2,
