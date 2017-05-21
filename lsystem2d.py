@@ -11,11 +11,8 @@ black = (  0,   0,   0, 255)
 white = (255, 255, 255, 255)
 size  = (1000, 1000)
 
-def deg_to_rad(deg):
-    return np.pi/180*deg
-
 iterations = 4
-angel = deg_to_rad(22.5)
+angel = 22.5 # In gradus
 start_point = (500, 1000)
 width_point = 2
 step_length = 1
@@ -34,6 +31,8 @@ def rule_production(axiom, producitons, iterations):
         rule = ''.join([producitons[s] for s in rule])
     return rule
 
+rule = rule_production(axiom, producitons, iterations)
+
 def rotate(point, phi):
     rotation_matrix = [
         [ np.cos(phi), np.sin(phi)],
@@ -46,6 +45,7 @@ def rad_to_euc(r, phi):
     return x, y
 
 def draw_koch_islands(angel, rule, start_point, width_point, step_length):
+    '''Draw figure'''
     canvas = Image.new('RGBA', size, black)
     draw = ImageDraw.Draw(canvas)
     xy_angel = np.pi
@@ -69,11 +69,8 @@ def draw_koch_islands(angel, rule, start_point, width_point, step_length):
             pass
     return canvas
 
-rule = rule_production(axiom, producitons, iterations)
-
 def make_dimensions(rule, size):
-    '''Функция определяет необходимую длину шага для того, чтобы наша фигура
-    поместилась на полотно заданного размера'''
+    '''Count step length and start point to fit in canvas size'''
     x_dim = y_dim = np.array((0, 0))
     xy_point = np.array((0,0), dtype='float64')
     curr_angel = np.pi
@@ -103,9 +100,13 @@ def make_dimensions(rule, size):
                        abs(y_dim[0])*step + (size[1] - y_width * step)/2))
     
     return center, step
-            
-start_point, step_length = make_dimensions(rule, size)
-canvas = draw_koch_islands(angel, rule, start_point, width_point, step_length)
 
-#canvas = draw_koch_islands(angel, rule, start_point,  3, 5)
+def deg_to_rad(deg):
+    return np.pi/180*deg
+
+# Count step length and start point to fit in canvas size
+start_point, step_length = make_dimensions(rule, size)
+
+# Draw image
+canvas = draw_koch_islands(deg_to_rad(angel), rule, start_point, width_point, step_length)
 canvas.show()
