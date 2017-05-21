@@ -40,12 +40,8 @@ class LSystem2D:
         productions[']'] = ']'
         for i in range(self.iterations):
             rule = ''.join([productions[s] for s in rule])
-        self.rule = rule  
+        self.rule = rule
 
-figure = LSystem2D(axiom, productions, iterations, angel)
-figure.make_rule()
-
-rule = figure.rule
 
 def rotate(point, phi):
     rotation_matrix = [
@@ -115,12 +111,12 @@ def make_dimensions(angel, rule, size):
     
     return center, step
 
-def deg_to_rad(deg):
-    return np.pi/180*deg
+figure = LSystem2D(axiom, productions, iterations, angel)
+figure.make_rule()
 
 # Count step length and start point to fit in canvas size
-start_point, step_length = make_dimensions(deg_to_rad(angel), rule, size)
+start_point, step_length = make_dimensions(figure.angel, figure.rule, size)
 
 # Draw image
-canvas = draw_koch_islands(deg_to_rad(angel), rule, start_point, width_point, step_length)
+canvas = draw_koch_islands(figure.angel, figure.rule, start_point, width_point, step_length)
 canvas.show()
