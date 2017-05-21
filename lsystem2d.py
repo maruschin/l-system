@@ -34,11 +34,15 @@ def rule_production(axiom, producitons, iterations):
         rule = ''.join([producitons[s] for s in rule])
     return rule
 
-
+def rotate(point, phi):
+    rotation_matrix = [
+        [ np.cos(phi), np.sin(phi)],
+        [-np.sin(phi), np.cos(phi)]
+    ]
+    return point.dot(rotation_matrix)
 
 def rad_to_euc(r, phi):
-    x = r * np.sin(phi)
-    y = r * np.cos(phi)
+    x, y = rotate(np.array([r, r]), phi)
     return x, y
 
 def draw_koch_islands(angel, rule, start_point, width_point, step_length):
