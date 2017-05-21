@@ -41,6 +41,11 @@ class LSystem2D:
         for i in range(self.iterations):
             rule = ''.join([productions[s] for s in rule])
         self.rule = rule
+    
+    def make_dimensions(self, size):
+        center, step = make_dimensions(self.angel, self.rule, size)
+        self.start_point = center
+        self.step_length = step
 
 
 def rotate(point, phi):
@@ -54,7 +59,11 @@ def rad_to_euc(r, phi):
     x, y = rotate(np.array([r, r]), phi)
     return x, y
 
-def draw_koch_islands(angel, rule, start_point, width_point, step_length):
+def draw_koch_islands(figure, width_point):
+    angel = figure.angel
+    rule  = figure.rule
+    start_point = figure.start_point
+    step_length = figure.step_length
     '''Draw figure'''
     canvas = Image.new('RGBA', size, white)
     draw = ImageDraw.Draw(canvas)
@@ -111,12 +120,12 @@ def make_dimensions(angel, rule, size):
     
     return center, step
 
+# Make figure example of class
 figure = LSystem2D(axiom, productions, iterations, angel)
+# Make rule
 figure.make_rule()
-
 # Count step length and start point to fit in canvas size
-start_point, step_length = make_dimensions(figure.angel, figure.rule, size)
-
+figure.make_dimensions(size)
 # Draw image
-canvas = draw_koch_islands(figure.angel, figure.rule, start_point, width_point, step_length)
+canvas = draw_koch_islands(figure, width_point)
 canvas.show()
