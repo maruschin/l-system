@@ -32,9 +32,9 @@ def rule_production(axiom, productions, iterations):
     return rule
 
 class LSystem2D:
-    def __init__(self, axiom, prodictions, iterations, angel):
+    def __init__(self, axiom, productions, iterations, angel):
         self.axiom = axiom
-        self.prodictions = prodictions
+        self.productions = productions
         self.iterations = iterations
         self.angel = self.ang_to_rad(angel)
     
@@ -42,7 +42,17 @@ class LSystem2D:
         return np.pi/180*deg
     
     def make_rule(self):
-        self.rule = rule_production(self.axiom, self.prodictions, self.iterations)
+        #self.rule = rule_production(self.axiom, self.prodictions, self.iterations)
+        rule = self.axiom
+        productions = self.productions
+        productions['+'] = '+'
+        productions['-'] = '-'
+        productions['['] = '['
+        productions[']'] = ']'
+        for i in range(self.iterations):
+            rule = ''.join([productions[s] for s in rule])
+        self.rule = rule
+        
 
 figure = LSystem2D(axiom, productions, iterations, angel)
 figure.make_rule()
