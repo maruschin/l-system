@@ -30,9 +30,10 @@ class LSystem2D:
     
     def make_dimensions(self, size):
         self.size = size
-        center, step = make_dimensions(self.angel, self.rule, size)
+        points, center, step = make_dimensions(self.angel, self.rule, size)
         self.start_point = center
         self.step_length = step
+        self.points = points
 
 
 def rotate(point, phi):
@@ -46,28 +47,24 @@ def rad_to_euc(r, phi):
     x, y = rotate(np.array([r, r]), phi)
     return x, y
 
-def draw_koch_islands(figure, canvas_color, point_width, point_color):
-    angel = figure.angel
-    rule  = figure.rule
-    start_point = figure.start_point
-    step_length = figure.step_length
-    size = figure.size
+def draw_koch_islands(figure, canvas_color, line_width, line_color):
     '''Draw figure'''
-    canvas = Image.new('RGBA', size, canvas_color)
+    canvas = Image.new('RGBA', figure.size, canvas_color)
     draw = ImageDraw.Draw(canvas)
+    start_point = figure.start_point
     xy_angel = np.pi
     save_angel = []
-    for r in rule:
+    for r in figure.rule:
         if r == 'F':
-            end_point = start_point + np.array(rad_to_euc(step_length, xy_angel))
-            draw.line([tuple(start_point), tuple(end_point)], fill=point_color, width=point_width)
+            end_point = start_point + np.array(rad_to_euc(figure.step_length, xy_angel))
+            draw.line([tuple(start_point), tuple(end_point)], fill=line_color, width=line_width)
             start_point = end_point
         elif r == 'f':
-            start_point += np.array(rad_to_euc(step_length, curr_angel))
+            start_point += np.array(rad_to_euc(figure.step_length, curr_angel))
         elif r == '-':
-            xy_angel -= angel
+            xy_angel -= figure.angel
         elif r == '+':
-            xy_angel += angel
+            xy_angel += figure.angel
         elif r == '[':
             save_angel.append((xy_angel, start_point.copy()))
         elif r == ']':
@@ -83,11 +80,11 @@ def make_dimensions(angel, rule, size):
     curr_angel = np.pi
     save_angel = []
     step_length = 1
+    xy_points = [xy_point]
     for r in rule:
         if r in 'fF':
             xy_point += np.array(rad_to_euc(step_length, curr_angel))
-            x_dim = min(x_dim[0], xy_point[0]), max(x_dim[1], xy_point[0])
-            y_dim = min(y_dim[0], xy_point[1]), max(y_dim[1], xy_point[1])
+            xy_points.append(xy_point)
         elif r == '-':
             curr_angel -= angel
         elif r == '+':
@@ -99,15 +96,21 @@ def make_dimensions(angel, rule, size):
         else:
             pass
     
+    x_points = [xy_point[0] for xy_point in xy_points]
+    y_points = [xy_point[1] for xy_point in xy_points]
+    x_dim = min(x_points), max(x_points)
+    y_dim = min(y_points), max(y_points)
+    
     x_width = sum([abs(x) for x in x_dim])
     y_width = sum([abs(y) for y in y_dim])
+    
     step = np.floor(min(size[0]/(x_width), size[1]/(y_width)))
     step = step if step > 1 else 1
     
     center = np.array((abs(x_dim[0])*step + (size[0] - x_width * step)/2,
                        abs(y_dim[0])*step + (size[1] - y_width * step)/2))
     
-    return center, step
+    return xy_points, center, step
 
 black = (  0,   0,   0, 255)
 white = (255, 255, 255, 255)
@@ -129,6 +132,6 @@ figure.make_dimensions(size=(1000, 1000))
 # Draw image
 canvas = draw_koch_islands(figure,
                            canvas_color=white,
-                           point_width=2,
-                           point_color=black)
+                           line_width=2,
+                           line_color=black)
 canvas.show()
