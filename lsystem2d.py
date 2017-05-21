@@ -30,10 +30,10 @@ class LSystem2D:
     
     def make_dimensions(self, size):
         self.size = size
-        points, center, step = make_dimensions(self.angel, self.rule, size)
+        lines, center, step = make_dimensions(self.angel, self.rule, size)
         self.start_point = center
         self.step_length = step
-        self.points = points
+        self.points = lines
 
 
 def rotate(point, phi):
@@ -76,30 +76,29 @@ def draw_koch_islands(figure, canvas_color, line_width, line_color):
 def make_dimensions(angel, rule, size):
     '''Count step length and start point to fit in canvas size'''
     x_dim = y_dim = np.array((0, 0))
-    xy_point = np.array((0,0), dtype='float64')
+    start_point = np.array((0,0), dtype='float64')
     curr_angel = np.pi
     save_angel = []
     step_length = 1
-    xy_points = [xy_point]
+    lines = []
     for r in rule:
         if r in 'fF':
-            xy_point += np.array(rad_to_euc(step_length, curr_angel))
-            xy_points.append(xy_point)
+            end_point = start_point + np.array(rad_to_euc(step_length, curr_angel))
+            lines.append([start_point, end_point])
+            start_point = end_point
+            # Find min and max border of our figure
+            x_dim = min(x_dim[0], end_point[0]), max(x_dim[1], end_point[0])
+            y_dim = min(y_dim[0], end_point[1]), max(y_dim[1], end_point[1])
         elif r == '-':
             curr_angel -= angel
         elif r == '+':
             curr_angel += angel
         elif r == '[':
-            save_angel.append((curr_angel, xy_point.copy()))
+            save_angel.append((curr_angel, start_point.copy()))
         elif r == ']':
-            curr_angel, xy_point = save_angel.pop()
+            curr_angel, start_point = save_angel.pop()
         else:
             pass
-    
-    x_points = [xy_point[0] for xy_point in xy_points]
-    y_points = [xy_point[1] for xy_point in xy_points]
-    x_dim = min(x_points), max(x_points)
-    y_dim = min(y_points), max(y_points)
     
     x_width = sum([abs(x) for x in x_dim])
     y_width = sum([abs(y) for y in y_dim])
@@ -110,7 +109,7 @@ def make_dimensions(angel, rule, size):
     center = np.array((abs(x_dim[0])*step + (size[0] - x_width * step)/2,
                        abs(y_dim[0])*step + (size[1] - y_width * step)/2))
     
-    return xy_points, center, step
+    return lines, center, step
 
 black = (  0,   0,   0, 255)
 white = (255, 255, 255, 255)
