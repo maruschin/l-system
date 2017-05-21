@@ -21,16 +21,6 @@ productions = {
     'F': 'F[FF+F][F]+F-F'
 }
 
-def rule_production(axiom, productions, iterations):
-    productions['+'] = '+'
-    productions['-'] = '-'
-    productions['['] = '['
-    productions[']'] = ']'
-    rule = axiom
-    for i in range(iterations):
-        rule = ''.join([productions[s] for s in rule])
-    return rule
-
 class LSystem2D:
     def __init__(self, axiom, productions, iterations, angel):
         self.axiom = axiom
@@ -42,7 +32,6 @@ class LSystem2D:
         return np.pi/180*deg
     
     def make_rule(self):
-        #self.rule = rule_production(self.axiom, self.prodictions, self.iterations)
         rule = self.axiom
         productions = self.productions
         productions['+'] = '+'
@@ -51,13 +40,10 @@ class LSystem2D:
         productions[']'] = ']'
         for i in range(self.iterations):
             rule = ''.join([productions[s] for s in rule])
-        self.rule = rule
-        
+        self.rule = rule  
 
 figure = LSystem2D(axiom, productions, iterations, angel)
 figure.make_rule()
-
-#rule = rule_production(axiom, productions, iterations)
 
 rule = figure.rule
 
