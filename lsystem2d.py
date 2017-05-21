@@ -9,13 +9,10 @@ import numpy as np
 
 black = (  0,   0,   0, 255)
 white = (255, 255, 255, 255)
-size  = (1000, 1000)
 
 iterations = 4
 angel = 22.5 # In gradus
 start_point = (500, 1000)
-width_point = 2
-step_length = 1
 axiom = 'F'
 productions = {
     'F': 'F[FF+F][F]+F-F'
@@ -43,6 +40,7 @@ class LSystem2D:
         self.rule = rule
     
     def make_dimensions(self, size):
+        self.size = size
         center, step = make_dimensions(self.angel, self.rule, size)
         self.start_point = center
         self.step_length = step
@@ -64,6 +62,7 @@ def draw_koch_islands(figure, width_point):
     rule  = figure.rule
     start_point = figure.start_point
     step_length = figure.step_length
+    size = figure.size
     '''Draw figure'''
     canvas = Image.new('RGBA', size, white)
     draw = ImageDraw.Draw(canvas)
@@ -94,6 +93,7 @@ def make_dimensions(angel, rule, size):
     xy_point = np.array((0,0), dtype='float64')
     curr_angel = np.pi
     save_angel = []
+    step_length = 1
     for r in rule:
         if r in 'fF':
             xy_point += np.array(rad_to_euc(step_length, curr_angel))
@@ -125,7 +125,7 @@ figure = LSystem2D(axiom, productions, iterations, angel)
 # Make rule
 figure.make_rule()
 # Count step length and start point to fit in canvas size
-figure.make_dimensions(size)
+figure.make_dimensions(size=(1000, 1000))
 # Draw image
-canvas = draw_koch_islands(figure, width_point)
+canvas = draw_koch_islands(figure, width_point=2)
 canvas.show()
