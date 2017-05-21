@@ -17,18 +17,18 @@ start_point = (500, 1000)
 width_point = 2
 step_length = 1
 axiom = 'F'
-producitons = {
+productions = {
     'F': 'F[FF+F][F]+F-F'
 }
 
-def rule_production(axiom, producitons, iterations):
-    producitons['+'] = '+'
-    producitons['-'] = '-'
-    producitons['['] = '['
-    producitons[']'] = ']'
+def rule_production(axiom, productions, iterations):
+    productions['+'] = '+'
+    productions['-'] = '-'
+    productions['['] = '['
+    productions[']'] = ']'
     rule = axiom
     for i in range(iterations):
-        rule = ''.join([producitons[s] for s in rule])
+        rule = ''.join([productions[s] for s in rule])
     return rule
 
 class LSystem2D:
@@ -44,10 +44,10 @@ class LSystem2D:
     def make_rule(self):
         self.rule = rule_production(self.axiom, self.prodictions, self.iterations)
 
-figure = LSystem2D(axiom, producitons, iterations, angel)
+figure = LSystem2D(axiom, productions, iterations, angel)
 figure.make_rule()
 
-rule = rule_production(axiom, producitons, iterations)
+rule = rule_production(axiom, productions, iterations)
 
 def rotate(point, phi):
     rotation_matrix = [
