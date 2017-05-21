@@ -7,17 +7,6 @@ from PIL import Image, ImageDraw
 
 import numpy as np
 
-black = (  0,   0,   0, 255)
-white = (255, 255, 255, 255)
-
-iterations = 4
-angel = 22.5 # In gradus
-start_point = (500, 1000)
-axiom = 'F'
-productions = {
-    'F': 'F[FF+F][F]+F-F'
-}
-
 class LSystem2D:
     def __init__(self, axiom, productions, iterations, angel):
         self.axiom = axiom
@@ -57,21 +46,21 @@ def rad_to_euc(r, phi):
     x, y = rotate(np.array([r, r]), phi)
     return x, y
 
-def draw_koch_islands(figure, width_point):
+def draw_koch_islands(figure, canvas_color, point_width, point_color):
     angel = figure.angel
     rule  = figure.rule
     start_point = figure.start_point
     step_length = figure.step_length
     size = figure.size
     '''Draw figure'''
-    canvas = Image.new('RGBA', size, white)
+    canvas = Image.new('RGBA', size, canvas_color)
     draw = ImageDraw.Draw(canvas)
     xy_angel = np.pi
     save_angel = []
     for r in rule:
         if r == 'F':
             end_point = start_point + np.array(rad_to_euc(step_length, xy_angel))
-            draw.line([tuple(start_point), tuple(end_point)], fill=black, width=width_point)
+            draw.line([tuple(start_point), tuple(end_point)], fill=point_color, width=point_width)
             start_point = end_point
         elif r == 'f':
             start_point += np.array(rad_to_euc(step_length, curr_angel))
@@ -120,6 +109,17 @@ def make_dimensions(angel, rule, size):
     
     return center, step
 
+black = (  0,   0,   0, 255)
+white = (255, 255, 255, 255)
+
+iterations = 4
+angel = 22.5 # In gradus
+start_point = (500, 1000)
+axiom = 'F'
+productions = {
+    'F': 'F[FF+F][F]+F-F'
+}
+
 # Make figure example of class
 figure = LSystem2D(axiom, productions, iterations, angel)
 # Make rule
@@ -127,5 +127,8 @@ figure.make_rule()
 # Count step length and start point to fit in canvas size
 figure.make_dimensions(size=(1000, 1000))
 # Draw image
-canvas = draw_koch_islands(figure, width_point=2)
+canvas = draw_koch_islands(figure,
+                           canvas_color=white,
+                           point_width=2,
+                           point_color=black)
 canvas.show()
