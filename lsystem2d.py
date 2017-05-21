@@ -47,7 +47,9 @@ class LSystem2D:
 figure = LSystem2D(axiom, productions, iterations, angel)
 figure.make_rule()
 
-rule = rule_production(axiom, productions, iterations)
+#rule = rule_production(axiom, productions, iterations)
+
+rule = figure.rule
 
 def rotate(point, phi):
     rotation_matrix = [
