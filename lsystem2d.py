@@ -12,14 +12,23 @@ class LSystem2D:
         self.axiom = axiom
         self.productions = productions
         self.iterations = iterations
-        self.angel = self.ang_to_rad(angel)
+        self.grad = angel
+        self.angel = self.__ang_to_rad(angel)
+        self.__make_rule()
     
-    def ang_to_rad(self, deg):
+    def __repr__(self):
+        string = "axiom: " + str(self.axiom) + '\n' +\
+        "productions: " + str(self.productions) + '\n' +\
+        "iterations: " + str(self.iterations) + '\n' +\
+        "angel: " + str(self.grad) + '°'
+        return string
+        
+    def __ang_to_rad(self, deg):
         return np.pi/180*deg
     
-    def make_rule(self):
+    def __make_rule(self):
         rule = self.axiom
-        productions = self.productions
+        productions = self.productions.copy()
         productions['+'] = '+'
         productions['-'] = '-'
         productions['['] = '['
@@ -27,20 +36,27 @@ class LSystem2D:
         for i in range(self.iterations):
             rule = ''.join([productions[s] for s in rule])
         self.rule = rule
+
+
+class LFigure:
+    def __init__(self, lsystem, size):
+        self.lsystem = lsystem
+        self.rule = self.lsystem.rule
+        self.angel = self.lsystem.angel
+        self.make_dimensions(size)
     
     def make_dimensions(self, size):
-        self.size = size
         lines, center, step = make_dimensions(self.angel, self.rule, size)
+        self.size = size
         self.start_point = center
         self.step_length = step
         self.lines = lines
 
-
 def rotate(point, phi):
-    rotation_matrix = [
+    rotation_matrix = np.array([
         [ np.cos(phi), np.sin(phi)],
         [-np.sin(phi), np.cos(phi)]
-    ]
+    ])
     return point.dot(rotation_matrix)
 
 def rad_to_euc(r, phi):
@@ -95,8 +111,11 @@ def make_dimensions(angel, rule, size):
             lines.append([start_point, end_point])
             start_point = end_point
             # Find min and max border of our figure
-            x_dim = min(x_dim[0], end_point[0]), max(x_dim[1], end_point[0])
-            y_dim = min(y_dim[0], end_point[1]), max(y_dim[1], end_point[1])
+            dimension = lambda dim, dot: (min(dim[0], dot), max(dim[1], dot))
+            x_dim = dimension(x_dim, end_point[0])
+            y_dim = dimension(y_dim, end_point[1])
+            #x_dim = min(x_dim[0], end_point[0]), max(x_dim[1], end_point[0])
+            #y_dim = min(y_dim[0], end_point[1]), max(y_dim[1], end_point[1])
         elif r == '-':
             curr_angel -= angel
         elif r == '+':
@@ -131,11 +150,11 @@ productions = {
 }
 
 # Make figure example of class
-figure = LSystem2D(axiom, productions, iterations, angel)
-# Make rule
-figure.make_rule()
+lsystem = LSystem2D(axiom, productions, iterations, angel)
+print(lsystem)
+figure = LFigure(lsystem, size=(1000, 1000))
 # Count step length and start point to fit in canvas size
-figure.make_dimensions(size=(1000, 1000))
+#figure.make_dimensions()
 # Draw image
 
 canvas = draw_koch_islands(figure, canvas_color=white, line_width=2, line_color=black)
