@@ -33,7 +33,7 @@ class LSystem2D:
         lines, center, step = make_dimensions(self.angel, self.rule, size)
         self.start_point = center
         self.step_length = step
-        self.points = lines
+        self.lines = lines
 
 
 def rotate(point, phi):
@@ -73,6 +73,14 @@ def draw_koch_islands(figure, canvas_color, line_width, line_color):
             pass
     return canvas
 
+def draw_lines(figure, canvas_color, line_width, line_color):
+    '''Draw figure'''
+    canvas = Image.new('RGBA', figure.size, canvas_color)
+    draw = ImageDraw.Draw(canvas)
+    for line in figure.lines:
+        draw.line([tuple(line[0]), tuple(line[1])], fill=line_color, width=line_width)
+    return canvas
+
 def make_dimensions(angel, rule, size):
     '''Count step length and start point to fit in canvas size'''
     x_dim = y_dim = np.array((0, 0))
@@ -108,7 +116,7 @@ def make_dimensions(angel, rule, size):
     
     center = np.array((abs(x_dim[0])*step + (size[0] - x_width * step)/2,
                        abs(y_dim[0])*step + (size[1] - y_width * step)/2))
-    
+    lines = [line+center for line in lines]
     return lines, center, step
 
 black = (  0,   0,   0, 255)
@@ -129,8 +137,9 @@ figure.make_rule()
 # Count step length and start point to fit in canvas size
 figure.make_dimensions(size=(1000, 1000))
 # Draw image
-canvas = draw_koch_islands(figure,
-                           canvas_color=white,
-                           line_width=2,
-                           line_color=black)
+
+canvas = draw_koch_islands(figure, canvas_color=white, line_width=2, line_color=black)
+
+#canvas = draw_lines(figure, canvas_color=white, line_width=2, line_color=black)
+
 canvas.show()
