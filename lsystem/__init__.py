@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Package for L-system
 
-from .lsystem2d import *
+from .lsystem2d import LSystem2D
+from .lfigure import LFigure
+from .ldraw import LDrawPillow
 
 __title__ = 'L-System'
 __version__ = 'NaN'
