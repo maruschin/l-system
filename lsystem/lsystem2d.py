@@ -138,27 +138,22 @@ def make_dimensions(angel, rule, size):
     lines = [line+center for line in lines]
     return lines, center, step
 
-black = (  0,   0,   0, 255)
-white = (255, 255, 255, 255)
 
-iterations = 4
-angel = 22.5 # In gradus
-start_point = (500, 1000)
-axiom = 'F'
-productions = {
-    'F': 'F[FF+F][F]+F-F'
-}
-
-# Make figure example of class
-lsystem = LSystem2D(axiom, productions, iterations, angel)
-print(lsystem)
-figure = LFigure(lsystem, size=(1000, 1000))
-# Count step length and start point to fit in canvas size
-#figure.make_dimensions()
-# Draw image
-
-canvas = draw_koch_islands(figure, canvas_color=white, line_width=2, line_color=black)
-
-#canvas = draw_lines(figure, canvas_color=white, line_width=2, line_color=black)
-
-canvas.show()
+if __name__ == "__main__":
+    black = (  0,   0,   0, 255)
+    white = (255, 255, 255, 255)
+    
+    iterations = 3
+    angel = 90 # In gradus
+    start_point = (500, 1000)
+    axiom = 'F-F-F-F'
+    productions = {
+        'F': 'F-F+F+FF-F-F+F',
+    }
+    
+    # Make figure example of class
+    lsystem = LSystem2D(axiom, productions, iterations, angel)
+    figure = LFigure(lsystem, size=(1000, 1000))
+    canvas = draw_koch_islands(figure, canvas_color=white, line_width=2, line_color=black)
+    #canvas = draw_lines(figure, canvas_color=white, line_width=2, line_color=black)
+    canvas.show()
