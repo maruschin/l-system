@@ -1,6 +1,4 @@
 # L-System package
-import numpy as np
-
 from lsystem import draw_lines, LFigure, LSystem2D
 
 def main():
