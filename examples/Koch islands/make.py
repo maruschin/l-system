@@ -13,9 +13,9 @@ productions = {
     'F': 'F-F+F+FF-F-F+F',
 }
 
-for i in range(1, 4):
+for i in range(4):
     # Make figure example of class
     lsystem = LSystem2D(axiom, productions, i, angel)
-    figure  = LFigure(lsystem, size=(1000, 1000))
+    figure  = LFigure(lsystem, size=(600, 600))
     canvas  = draw_koch_islands(figure, canvas_color=white, line_width=2, line_color=black)
     canvas.save('quadratic Koch island - %s.png' % i)
