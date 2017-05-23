@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+# L-System package
 import numpy as np
 
 class LFigure:
@@ -9,10 +9,8 @@ class LFigure:
         self.make_dimensions(size)
     
     def make_dimensions(self, size):
-        lines, center, step = make_dimensions(self.angel, self.rule, size)
+        lines = make_dimensions(self.angel, self.rule, size)
         self.size = size
-        self.start_point = center
-        self.step_length = step
         self.lines = lines
 
 def rotate(point, phi):
@@ -37,14 +35,12 @@ def make_dimensions(angel, rule, size):
     for r in rule:
         if r in 'fF':
             end_point = start_point + np.array(rad_to_euc(step_length, curr_angel))
-            lines.append([start_point, end_point])
+            lines.append(np.array([start_point, end_point]))
             start_point = end_point
             # Find min and max border of our figure
             dimension = lambda dim, dot: (min(dim[0], dot), max(dim[1], dot))
             x_dim = dimension(x_dim, end_point[0])
             y_dim = dimension(y_dim, end_point[1])
-            #x_dim = min(x_dim[0], end_point[0]), max(x_dim[1], end_point[0])
-            #y_dim = min(y_dim[0], end_point[1]), max(y_dim[1], end_point[1])
         elif r == '-':
             curr_angel -= angel
         elif r == '+':
@@ -56,13 +52,15 @@ def make_dimensions(angel, rule, size):
         else:
             pass
     
-    x_width = sum([abs(x) for x in x_dim])
-    y_width = sum([abs(y) for y in y_dim])
+    # Move points to beginning of coordinate
+    lines = [line-[x_dim[0], y_dim[0]] for line in lines]
+    # Scale figure to fit in canvas
+    scale = min(size[0]/sum([abs(x) for x in x_dim]),
+                size[1]/sum([abs(y) for y in y_dim]))
+    lines = [line*scale for line in lines]
     
-    step = np.floor(min(size[0]/(x_width), size[1]/(y_width)))
-    step = step if step > 1 else 1
-    
-    center = np.array((abs(x_dim[0])*step + (size[0] - x_width * step)/2,
-                       abs(y_dim[0])*step + (size[1] - y_width * step)/2))
-    lines = [line+center for line in lines]
-    return lines, center, step
+    return lines
+
+
+if __name__ == "__main__":
+    pass
