@@ -7,7 +7,7 @@
 ![Quadratic Koch island 0](quadratic Koch island - 0.png)
 
 ## Quadratic Koch island n=1
-![Quadratic Koch island 1](./quadratic Koch island - 2.png)
+![Quadratic Koch island 1](/examples/Koch islands/quadratic Koch island - 2.png)
 
 ## Quadratic Koch island n=2
 ![Quadratic Koch island 2](quadratic Koch island - 3.png)
