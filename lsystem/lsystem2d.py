@@ -1,7 +1,32 @@
 # L-System package
 import numpy as np
+import logging
 
-class LSystem2D:
+
+class Axiom(object):
+    """ Дескриптор для определения аксиомы """
+    def __init__():
+        self.value = Null
+    def __get__(self, obj, type):
+        return self.value
+
+    def __set__(self, obj, value):
+        self.value = value
+
+class Productions(object):
+    """ Дескриптор для определения произведения """
+    def __init__():
+        self.value = Null
+    def __get__(self, obj, type):
+        return self.value
+
+    def __set__(self, obj, value):
+        self.value = value
+
+
+class LSystem2D(object):
+    axiom = Axiom()
+    productions = Productions()
     def __init__(self, axiom, productions, iterations, angel):
         self.axiom = axiom
         self.productions = productions
@@ -23,8 +48,8 @@ class LSystem2D:
     def __make_rule(self):
         rule = self.axiom
         productions = self.productions.copy()
-        productions['+'] = '+'
-        productions['-'] = '-'
+        productions['+'] = '+
+'        productions['-'] = '-'
         productions['['] = '['
         productions[']'] = ']'
         for i in range(self.iterations):

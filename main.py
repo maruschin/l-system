@@ -6,11 +6,12 @@ def main():
     black = (  0,   0,   0, 255)
     white = (255, 255, 255, 255)
     # Def figure
-    iterations = 3
-    angel = 90 # In gradus
-    axiom = 'F-F-F-F'
+    iterations = 7
+    angel = 25 # In gradus
+    axiom = 'f'
     productions = {
-        'F': 'F-F+F+FF-F-F+F',
+        'f': 'F-[[f]+f]+F[+Ff]-f',
+        'F': 'FF',
     }
     
     lsystem = LSystem2D(axiom, productions, iterations, angel)
